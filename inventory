@@ -1,2 +1,7 @@
 [galaxyservers]
-t-nate
+localhost
+
+[galaxyservers:vars]
+ansible_connection=local
+ansible_become=yes
+
