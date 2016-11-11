@@ -1,0 +1,11 @@
+- name: Install supervisor
+  apt:
+    name: supervisor
+
+- name: Install supervisor configs
+  template:
+    src: "templates/supervisor/{{ item }}.j2"
+    dest: "/etc/supervisor/conf.d/{{ item }}.conf"
+  with_items: "{{ supervisor_configs }}"
+  notify:
+    - update supervisor

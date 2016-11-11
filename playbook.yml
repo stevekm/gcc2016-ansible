@@ -1,0 +1,61 @@
+- name: Create Galaxy user and install dependencies
+  hosts: galaxyservers
+  remote_user: root
+  tasks:
+    - name: Create Galaxy user
+      user:
+        name: "{{ galaxy_user }}"
+        system: yes
+    - name: Install packages
+      apt:
+        pkg: "{{ item }}"
+        update_cache: yes
+        cache_valid_time: 7200
+      with_items:
+        - python-psycopg2
+        - git
+        - python-virtualenv
+        - uwsgi
+        - uwsgi-plugin-python
+    - name: Create Galaxy server directory
+      file:
+        name: /srv/galaxy
+        state: directory
+        owner: "{{ galaxy_user }}"
+        group: "{{ galaxy_user }}"
+  roles:
+    - galaxyprojectdotorg.postgresql
+    - galaxyprojectdotorg.nginx
+
+- name: Configure PostgreSQL access
+  hosts: galaxyservers
+  become: yes
+  become_user: postgres
+  remote_user: root
+  roles:
+    - natefoo.postgresql_objects
+
+- name: Install and configure Galaxy
+  hosts: galaxyservers
+  become: yes
+  become_user: "{{ galaxy_user }}"
+  remote_user: root
+  roles:
+    - galaxyprojectdotorg.galaxy
+
+- name: Install and configure supervisor
+  hosts: galaxyservers
+  remote_user: root
+  roles:
+    - supervisor
+
+- name: Install Galaxy tools
+  hosts: localhost
+  connection: local
+  vars:
+    galaxy_tools_api_key: 8279a8ce0b68beebf5e3da5a295214ec
+    galaxy_tools_base_dir: /home/nate
+    galaxy_tools_galaxy_instance_url: http://t-nate.galaxyproject.org/
+  roles:
+    - galaxyprojectdotorg.galaxy-tools
+  tags: tools

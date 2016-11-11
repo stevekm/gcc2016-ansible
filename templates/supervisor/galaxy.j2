@@ -1,0 +1,8 @@
+[program:galaxy]
+command         = uwsgi --plugin python --virtualenv {{ galaxy_server_dir }}/.venv --ini-paste {{ galaxy_server_dir }}/galaxy.ini
+directory       = {{ galaxy_server_dir }}
+autostart       = true
+autorestart     = true
+startsecs       = 10
+user            = {{ galaxy_user }}
+stopsignal      = INT

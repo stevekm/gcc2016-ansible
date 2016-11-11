@@ -1,0 +1,30 @@
+galaxy_user: galaxy
+
+postgresql_objects_users:
+  - name: galaxy
+
+postgresql_objects_databases:
+  - name: galaxy
+    owner: galaxy
+
+galaxy_server_dir: /srv/galaxy/server
+galaxy_vcs: git
+galaxy_changeset_id: release_16.04
+
+galaxy_config:
+  "app:main":
+    database_connection: postgresql:///galaxy
+    admin_users: nate@bx.psu.edu
+    tool_dependency_dir: /srv/galaxy/deps
+  "uwsgi":
+    processes: 1
+    socket: 127.0.0.1:4001
+    pythonpath: "{{ galaxy_server_dir }}/lib"
+    threads: 4
+    master: True
+
+nginx_configs:
+  - galaxy
+
+supervisor_configs:
+  - galaxy

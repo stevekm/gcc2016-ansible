@@ -1,0 +1,6 @@
+ansible-playbook -i inventory playbook.yml
+
+ansible-galaxy install -p roles galaxyprojectdotorg.postgresql
+ansible-galaxy install -p roles natefoo.postgresql_objects
+ansible-galaxy install -p roles galaxyprojectdotorg.nginx
+ansible-galaxy install -p roles galaxyprojectdotorg.galaxy

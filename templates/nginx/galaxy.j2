@@ -1,0 +1,20 @@
+server {
+    listen *:80 default_server;
+    server_name galaxy;
+
+    location / {
+        uwsgi_pass 127.0.0.1:4001;
+        include uwsgi_params;
+    }
+
+
+    location /static {
+        alias {{ galaxy_server_dir }}/static;
+    }
+    location /static/style {
+        alias {{ galaxy_server_dir }}/static/june_2007_style/blue;
+    }
+    location /static/welcome.html {
+        alias {{ galaxy_server_dir }}/static/welcome.html.sample;
+    }
+}
