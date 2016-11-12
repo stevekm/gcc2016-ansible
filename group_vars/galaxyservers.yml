@@ -1,0 +1,37 @@
+galaxy_user: galaxy
+
+postgresql_objects_users:
+  - name: galaxy
+
+postgresql_objects_databases:
+  - name: galaxy
+    owner: galaxy
+
+galaxy_server_dir: /srv/galaxy/server
+galaxy_vcs: git
+galaxy_changeset_id: release_16.07
+
+galaxy_config:
+  "app:main":
+    database_connection: postgresql:///galaxy
+    admin_users: kellys04@nyumc.org     # <---- Put your user email here
+    tool_dependency_dir: /srv/galaxy/deps
+    job_config_file: "{{ galaxy_config_dir }}/job_conf.xml"
+  "uwsgi":
+    processes: 1
+    socket: 127.0.0.1:4001
+    # http: 127.0.0.1:8080
+    pythonpath: "{{ galaxy_server_dir }}/lib"
+    threads: 4
+    master: True
+
+galaxy_config_files:
+  - src: files/galaxy/job_conf.xml
+    dest: "{{ galaxy_config_dir }}/job_conf.xml"
+
+nginx_configs:
+  - galaxy
+
+supervisor_configs:
+  - galaxy
+
