@@ -19,7 +19,8 @@ galaxy_config:
     job_config_file: "{{ galaxy_config_dir }}/job_conf.xml"
   "uwsgi":
     processes: 1
-    socket: 127.0.0.1:4001
+    socket = 127.0.0.1:4001     # uwsgi protocol for nginx
+    http = 127.0.0.1:8080       # serve http directly
     pythonpath: "{{ galaxy_server_dir }}/lib"
     threads: 4
     master: True

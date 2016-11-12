@@ -9,3 +9,10 @@
   with_items: "{{ supervisor_configs }}"
   notify:
     - update supervisor
+
+- name: Ensure supervisor is running
+  service:
+    name: supervisor
+    enabled: yes
+    state: started
+

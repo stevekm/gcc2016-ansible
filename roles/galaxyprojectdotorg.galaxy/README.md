@@ -14,7 +14,7 @@ Requirements
 
 This role has the same dependencies as the VCS module in use, namely
 [Mercurial][hg] if using `hg` or [Git][git] if using `git`.  In addition,
-[Python virtualenv][venv] is required (as is [pip][pip], but pip will
+[Python virtualenv][venv] is required (as is [pip][pip], but pip will be
 automatically installed with virtualenv). These can easily be installed via a
 pre-task in the same play as this role:
 
@@ -22,14 +22,14 @@ pre-task in the same play as this role:
         pre_tasks:
           - name: Install Mercurial
             apt: pkg={{ item }} state=installed
-            sudo: yes
+            become: yes
             when: ansible_os_family = 'Debian'
             with_items:
               - mercurial
               - python-virtualenv
           - name: Install Mercurial
             yum: pkg={{ item }} state=installed
-            sudo: yes
+            become: yes
             when: ansible_os_family = 'RedHat'
             with_items:
               - mercurial
@@ -147,7 +147,7 @@ Install Galaxy on your local system with all the default options:
 Once installed, you can start with:
 
     % cd /home/nate/galaxy-dist
-    % python ./scripts/paster.py serve universe_wsgi.ini
+    % python ./scripts/paster.py serve config/galaxy.ini
 
 Install Galaxy with the clone and configs owned by a different user than the
 user running Galaxy, and backed by PostgreSQL, on the hosts in the
@@ -176,25 +176,25 @@ user running Galaxy, and backed by PostgreSQL, on the hosts in the
       pre_tasks:
         - name: Create Galaxy code owner user
           user: name=gxcode comment="Galaxy Code" system=yes home=/opt/galaxy createhome=yes
-          sudo: yes
+          become: yes
         - name: Create Galaxy runtime user
           user: name=galaxy comment="Galaxy Server" system=yes home=/var/opt/galaxy createhome=yes
-          sudo: yes
+          become: yes
         - name: Install Mercurial
           action: '{{ pkg_module }} pkg=mercurial state=installed'
-          sudo: yes
+          become: yes
         - name: Install virtualenv
           action: '{{ pkg_module }} pkg=python-virtualenv state=installed'
-          sudo: yes
+          become: yes
         - name: Install psycopg2
           action: '{{ pkg_module }} pkg=python-psycopg2 state=installed'
-          sudo: yes
+          become: yes
         # Precreating the mutable config directory may be necessary (it's not in
         # our example since we set the user's home directory to
         # galaxy_mutable_config_dir's parent).
         #- name: Create mutable configuration file directory
         #  file: state=directory path={{ galaxy_mutable_config_dir }} owner=galaxy
-        #  sudo: yes
+        #  become: yes
       roles:
         # Install with:
         #   % ansible-galaxy install zzet.postgresql
@@ -202,16 +202,16 @@ user running Galaxy, and backed by PostgreSQL, on the hosts in the
         # Install with:
         #   % ansible-galaxy install natefoo.postgresql_objects
         - role: natefoo.postgresql_objects
-          sudo: yes
-          sudo_user: postgres
+          become: yes
+          become_user: postgres
         - role: galaxy
-          sudo: yes
-          sudo_user: gxcode
+          become: yes
+          become_user: gxcode
           galaxy_manage_mutable_setup: no
           galaxy_manage_database: no
         - role: galaxy
-          sudo: yes
-          sudo_user: galaxy
+          become: yes
+          become_user: galaxy
           galaxy_manage_clone: no
           galaxy_manage_static_setup: no
 

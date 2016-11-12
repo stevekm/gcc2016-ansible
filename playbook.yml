@@ -54,8 +54,9 @@
   connection: local
   vars:
     galaxy_tools_api_key: 8279a8ce0b68beebf5e3da5a295214ec
-    galaxy_tools_base_dir: /home/nate
+    galaxy_tools_base_dir: /srv/galaxy/tools/
     galaxy_tools_galaxy_instance_url: http://t-nate.galaxyproject.org/
   roles:
     - galaxyprojectdotorg.galaxy-tools
   tags: tools
+
